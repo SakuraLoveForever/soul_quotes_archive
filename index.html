@@ -20,6 +20,7 @@
             min-height: 100vh;
             padding: 40px 20px;
             color: #333;
+            scroll-behavior: smooth;
         }
 
         .container {
@@ -45,7 +46,7 @@
             text-align: center;
             color: #667eea;
             font-size: 0.95em;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding: 10px;
             background: rgba(102, 126, 234, 0.1);
             border-radius: 8px;
@@ -56,11 +57,77 @@
             content: "💡 ";
         }
 
+        /* 目录样式 */
+        .toc {
+            background: rgba(102, 126, 234, 0.08);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .toc-title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .toc-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .toc-item {
+            background: white;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #667eea;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .toc-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
         .stats {
             text-align: center;
             color: #666;
             margin-bottom: 30px;
             font-size: 0.95em;
+        }
+
+        .global-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
 
         .category-section {
@@ -111,14 +178,15 @@
         .quotes-container {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
                         padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                         opacity 0.3s ease;
             opacity: 0;
+            padding: 0 24px;
         }
 
         .quotes-container.expanded {
-            max-height: 20000px; /* 足够大的值以容纳内容 */
+            max-height: 50000px; /* 足够大的值以容纳内容 */
             opacity: 1;
             padding: 20px 24px;
         }
@@ -173,11 +241,11 @@
             font-weight: 600;
         }
 
-        /* Markdown 样式 */
+        /* Markdown 渲染样式 - 关键修复 */
         .quote-text blockquote {
-            margin: 0;
+            margin: 10px 0;
             padding: 12px 20px;
-            background: rgba(102, 126, 234, 0.08);
+            background: rgba(102, 126, 234, 0.1);
             border-left: 4px solid #667eea;
             border-radius: 4px;
             font-style: italic;
@@ -186,15 +254,17 @@
 
         .quote-text blockquote p {
             margin: 0;
+            line-height: 1.6;
         }
 
-        .quote-text strong {
+        .quote-text strong, .quote-text b {
             color: #667eea;
             font-weight: 700;
         }
 
-        .quote-text em {
+        .quote-text em, .quote-text i {
             color: #764ba2;
+            font-style: italic;
         }
 
         .quote-text code {
@@ -204,6 +274,19 @@
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
             color: #667eea;
+        }
+
+        .quote-text pre {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .quote-text pre code {
+            background: none;
+            padding: 0;
         }
 
         .quote-text ul, .quote-text ol {
@@ -225,6 +308,11 @@
             border-bottom-style: solid;
         }
 
+        .quote-text h1, .quote-text h2, .quote-text h3, .quote-text h4 {
+            color: #667eea;
+            margin: 10px 0;
+        }
+
         .quote-number {
             display: inline-block;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -239,6 +327,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             flex-shrink: 0;
+            vertical-align: top;
         }
 
         .quote-item:hover .quote-number {
@@ -260,29 +349,6 @@
             font-size: 1.1em;
         }
 
-        .global-controls {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            margin: 0 5px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -300,17 +366,30 @@
             .quote-item:hover .quote-text {
                 font-size: 1.05em;
             }
+            .toc-list {
+                gap: 6px;
+            }
+            .toc-item {
+                padding: 5px 10px;
+                font-size: 0.85em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>心灵鸡汤</h1>
-        <div class="hint">点击分类标题可展开或收起该部分内容</div>
+        <div class="hint">点击分类标题可展开或收起该部分内容，点击目录可快速定位</div>
 
         <div class="global-controls">
             <button class="btn" onclick="expandAll()">全部展开</button>
             <button class="btn" onclick="collapseAll()">全部收起</button>
+        </div>
+
+        <!-- 目录区域 -->
+        <div class="toc" id="toc" style="display: none;">
+            <div class="toc-title">📚 目录导航</div>
+            <div class="toc-list" id="toc-list"></div>
         </div>
 
         <div class="stats" id="stats"></div>
@@ -325,13 +404,18 @@
             refreshInterval: 5000
         };
 
-        // 配置 marked 选项
+        // 配置 marked 选项 - 关键配置确保正确渲染
         marked.setOptions({
             breaks: true,
             gfm: true,
             headerIds: false,
-            mangle: false
+            mangle: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: true
         });
+
+        let categories = []; // 存储分类信息用于目录
 
         function parseContent(text) {
             const lines = text.split('\n');
@@ -340,6 +424,7 @@
             let currentQuotes = [];
             let quoteCount = 0;
             let categoryCount = 0;
+            categories = []; // 重置分类数组
 
             lines.forEach(line => {
                 const trimmed = line.trim();
@@ -347,20 +432,23 @@
                 // 跳过空行
                 if (!trimmed) return;
 
-                // 处理分类标题（# 开头）
-                if (trimmed.startsWith('# ')) {
+                // 处理分类标题（# 开头）- 支持一级和二级标题
+                if (trimmed.match(/^#{1,2}\s/)) {
                     // 保存上一个分类的内容
                     if (currentCategory && currentQuotes.length > 0) {
-                        html += createCategorySection(currentCategory, currentQuotes, categoryCount);
+                        const catId = `category-${categoryCount}`;
+                        html += createCategorySection(currentCategory, currentQuotes, catId);
+                        categories.push({ name: currentCategory, id: catId });
                         currentQuotes = [];
                     }
-                    currentCategory = trimmed.substring(2);
+                    // 移除 # 符号获取标题
+                    currentCategory = trimmed.replace(/^#{1,2}\s*/, '');
                     categoryCount++;
                     return;
                 }
 
-                // 跳过其他 markdown 标记行（作为分类标题处理的）
-                if (trimmed.startsWith('##') || trimmed.startsWith('---')) {
+                // 跳过分隔符
+                if (trimmed.startsWith('---')) {
                     return;
                 }
 
@@ -376,35 +464,82 @@
 
             // 处理最后一个分类
             if (currentCategory && currentQuotes.length > 0) {
-                html += createCategorySection(currentCategory, currentQuotes, categoryCount);
+                const catId = `category-${categoryCount}`;
+                html += createCategorySection(currentCategory, currentQuotes, catId);
+                categories.push({ name: currentCategory, id: catId });
             }
 
             // 更新统计信息
             document.getElementById('stats').innerHTML = 
                 `共收录 <strong>${categoryCount}</strong> 个分类，<strong>${quoteCount}</strong> 条语录`;
 
+            // 生成目录
+            generateTOC();
+
             return html;
         }
 
-        function createCategorySection(category, quotes, categoryIndex) {
-            const categoryId = `category-${categoryIndex}`;
+        function generateTOC() {
+            const tocContainer = document.getElementById('toc');
+            const tocList = document.getElementById('toc-list');
+
+            if (categories.length === 0) {
+                tocContainer.style.display = 'none';
+                return;
+            }
+
+            tocList.innerHTML = categories.map(cat => 
+                `<a class="toc-item" onclick="jumpToCategory('${cat.id}')">${cat.name}</a>`
+            ).join('');
+
+            tocContainer.style.display = 'block';
+        }
+
+        function jumpToCategory(categoryId) {
+            const element = document.getElementById(categoryId);
+            const title = document.getElementById(`title-${categoryId}`);
+
+            if (element && title) {
+                // 展开该分类
+                element.classList.add('expanded');
+                title.classList.add('expanded');
+
+                // 滚动到该分类
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // 高亮闪烁效果
+                title.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%)';
+                setTimeout(() => {
+                    title.style.background = '';
+                }, 1000);
+            }
+        }
+
+        function createCategorySection(category, quotes, categoryId) {
             let quotesHtml = '';
 
             quotes.forEach(quote => {
-                // 使用 marked 渲染 Markdown 内容
-                const renderedContent = marked.parse(quote.content);
+                // 使用 marked.parseInline 或 marked.parse 渲染 Markdown
+                // 使用 parseInline 避免外层包裹 p 标签，但如果有复杂内容使用 parse
+                let renderedContent;
+                if (quote.content.includes('>') || quote.content.includes('**') || quote.content.includes('*') || quote.content.includes('`')) {
+                    renderedContent = marked.parse(quote.content);
+                } else {
+                    renderedContent = marked.parseInline(quote.content);
+                }
+
                 quotesHtml += `
                     <div class="quote-item">
                         <div class="quote-text">
                             <span class="quote-number">${quote.num}</span>
-                            ${renderedContent}
+                            <span class="quote-content">${renderedContent}</span>
                         </div>
                     </div>
                 `;
             });
 
             return `
-                <div class="category-section">
+                <div class="category-section" id="section-${categoryId}">
                     <h2 class="category-title" onclick="toggleCategory('${categoryId}')" id="title-${categoryId}">
                         ${category}
                     </h2>
