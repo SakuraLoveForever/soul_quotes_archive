@@ -1,3 +1,6 @@
+## 前提概要
+这是我一路走来阅读和看番中所深深触动的话语，希望这些话语能够带给你同样的鼓舞与激励
+
 ## 网址
 https://sakuraloveforever.github.io/soul_quotes_archive/
 
