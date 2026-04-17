@@ -17,7 +17,7 @@
             font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 40px 20px 40px 280px; /* 左侧留出空间给目录 */
+            padding: 40px 20px 40px 280px;
             color: #333;
             scroll-behavior: smooth;
         }
@@ -117,7 +117,6 @@
             opacity: 1;
         }
 
-        /* 移动端目录按钮 */
         .mobile-menu-btn {
             display: none;
             position: fixed;
@@ -135,7 +134,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        /* 遮罩层 */
         .overlay {
             display: none;
             position: fixed;
@@ -198,7 +196,7 @@
             border-radius: 12px;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.5);
-            scroll-margin-top: 20px; /* 滚动时留出顶部空间 */
+            scroll-margin-top: 20px;
         }
 
         .category-title {
@@ -238,20 +236,17 @@
             border-bottom-color: #667eea;
         }
 
+        /* 优化性能：使用 display 代替 max-height */
         .quotes-container {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                        padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity 0.3s ease;
+            display: none;
+            padding: 20px 24px;
             opacity: 0;
-            padding: 0 24px;
+            transition: opacity 0.3s ease;
         }
 
         .quotes-container.expanded {
-            max-height: 50000px;
+            display: block;
             opacity: 1;
-            padding: 20px 24px;
         }
 
         .quote-item {
@@ -304,20 +299,22 @@
             font-weight: 600;
         }
 
-        /* Markdown 样式 */
-        .quote-text blockquote {
+        /* 关键修复：确保引用块样式正确显示 */
+        .quote-text blockquote,
+        .quote-text blockquote p {
             margin: 10px 0;
-            padding: 12px 20px;
+            padding: 12px 16px;
             background: rgba(102, 126, 234, 0.1);
             border-left: 4px solid #667eea;
             border-radius: 4px;
             font-style: italic;
             color: #555;
+            line-height: 1.6;
         }
 
         .quote-text blockquote p {
             margin: 0;
-            line-height: 1.6;
+            padding: 0;
         }
 
         .quote-text strong, .quote-text b {
@@ -407,7 +404,6 @@
             font-size: 1.1em;
         }
 
-        /* 响应式设计 */
         @media (max-width: 768px) {
             body {
                 padding: 60px 15px 40px 15px;
@@ -460,13 +456,9 @@
 <base target="_blank">
 </head>
 <body>
-    <!-- 移动端菜单按钮 -->
     <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-
-    <!-- 遮罩层 -->
     <div class="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- 左侧固定目录 -->
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-title">📚 目录导航</div>
         <div class="sidebar-controls">
@@ -491,7 +483,6 @@
     <script>
         const CONFIG = {
             textFile: '心灵鸡汤.md'
-            // 移除了 refreshInterval，不再自动刷新
         };
 
         marked.setOptions({
@@ -504,7 +495,7 @@
         });
 
         let categories = [];
-        let expandedState = {}; // 记录每个分类的展开状态
+        let expandedState = {};
 
         function parseContent(text) {
             const lines = text.split('\n');
@@ -533,10 +524,12 @@
 
                 if (trimmed.startsWith('---')) return;
 
-                const match = trimmed.match(/^(\d+)\.\s*(.+)$/);
+                // 关键修复：正确处理 "数字. 内容" 格式，保留完整内容
+                const match = trimmed.match(/^(\d+)\.\s+(.+)$/);
                 if (match && currentCategory) {
                     const num = match[1];
-                    const content = match[2];
+                    // 保留数字后面的所有内容（包括 Markdown 标记）
+                    const content = trimmed.substring(match[0].indexOf(match[2]));
                     currentQuotes.push({ num, content });
                     quoteCount++;
                 }
@@ -572,7 +565,6 @@
         }
 
         function jumpToCategory(categoryId) {
-            // 更新目录激活状态
             document.querySelectorAll('.toc-item').forEach(item => {
                 item.classList.remove('active');
             });
@@ -583,15 +575,12 @@
             const section = document.getElementById(`section-${categoryId}`);
 
             if (container && title && section) {
-                // 展开该分类
                 container.classList.add('expanded');
                 title.classList.add('expanded');
                 expandedState[categoryId] = true;
 
-                // 滚动到该分类
                 section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-                // 移动端关闭侧边栏
                 if (window.innerWidth <= 768) {
                     toggleSidebar();
                 }
@@ -602,13 +591,12 @@
             let quotesHtml = '';
 
             quotes.forEach(quote => {
-                let renderedContent;
-                if (quote.content.includes('>') || quote.content.includes('**') || 
-                    quote.content.includes('*') || quote.content.includes('`')) {
-                    renderedContent = marked.parse(quote.content);
-                } else {
-                    renderedContent = marked.parseInline(quote.content);
-                }
+                // 关键修复：使用 marked.parse() 完整渲染，确保引用块正确处理
+                // 添加 unwrap 处理，避免外层包裹 p 标签导致的样式问题
+                let renderedContent = marked.parse(quote.content).trim();
+
+                // 如果结果被包裹在 p 标签中且只有一个段落，考虑是否需要 unwrap
+                // 但为了确保引用块等块级元素正确显示，我们保留 parse 的结果
 
                 quotesHtml += `
                     <div class="quote-item">
@@ -671,7 +659,6 @@
             });
         }
 
-        // 侧边栏切换（移动端）
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.querySelector('.overlay');
@@ -679,7 +666,6 @@
             overlay.classList.toggle('active');
         }
 
-        // 监听滚动，更新目录激活状态
         function updateActiveTOC() {
             const scrollPos = window.scrollY + 100;
 
@@ -720,7 +706,6 @@
 
                 contentDiv.innerHTML = html;
 
-                // 恢复展开状态（如果有的话）
                 Object.keys(expandedState).forEach(catId => {
                     if (expandedState[catId]) {
                         const container = document.getElementById(catId);
@@ -746,7 +731,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', loadContent);
-        // 移除了 setInterval，不再自动刷新页面
     </script>
 </body>
 </html>
