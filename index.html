@@ -22,6 +22,33 @@
             scroll-behavior: smooth;
         }
 
+        /* 顶部社交链接 */
+        .social-links {
+            position: fixed;
+            top: 12px;
+            right: 20px;
+            z-index: 1101;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .social-link {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 14px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
         /* 左侧固定目录 */
         .sidebar {
             position: fixed;
@@ -458,6 +485,13 @@
     <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
     <div class="overlay" onclick="toggleSidebar()"></div>
 
+    <!-- 顶部社交链接：小红书 / GitHub / B站 -->
+    <div style="position:fixed;top:12px;right:20px;z-index:1101;display:flex;gap:8px;align-items:center;">
+        <a href="https://www.xiaohongshu.com/user/profile/5e72db210000000001000d66" target="_blank" rel="noopener" title="小红书" style="background:linear-gradient(135deg,#ff6b6b,#ff4757);color:white;padding:8px 12px;border-radius:14px;text-decoration:none;font-size:0.9em;box-shadow:0 4px 12px rgba(0,0,0,0.15);">小红书</a>
+        <a href="https://github.com/SakuraLoveForever" target="_blank" rel="noopener" title="GitHub" style="background:linear-gradient(135deg,#24292e,#444);color:white;padding:8px 12px;border-radius:14px;text-decoration:none;font-size:0.9em;box-shadow:0 4px 12px rgba(0,0,0,0.15);">GitHub</a>
+        <a href="https://space.bilibili.com/481036572" target="_blank" rel="noopener" title="Bilibili" style="background:linear-gradient(135deg,#00a1d6,#0066cc);color:white;padding:8px 12px;border-radius:14px;text-decoration:none;font-size:0.9em;box-shadow:0 4px 12px rgba(0,0,0,0.15);">B站</a>
+    </div>
+
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-title">📚 目录导航</div>
         <div class="sidebar-controls">
@@ -563,6 +597,12 @@
                         j++;
                     }
 
+                    // 规范化：把 &gt; 实体恢复为 '>'，并移除行首多余不可见空格，使 '>' 位于行首
+                    tempContent = tempContent.replace(/&gt;/g, '>')
+                        .split(/\r?\n/)
+                        .map(l => l.replace(/^[\u00A0\u0020\t]+(?=>)/, ''))
+                        .join('\n');
+
                     // 如果合并后的内容为空（仅序号无实质内容），则跳过，不计入语录
                     if (tempContent.replace(/\s|&nbsp;|\u00A0/g, '') === '') {
                         i = j - 1; // 跳过已检查的行
@@ -637,18 +677,16 @@
             let quotesHtml = '';
 
             quotes.forEach(quote => {
-                // 关键修复：使用 marked.parse() 完整渲染，确保引用块正确处理
-                // 添加 unwrap 处理，避免外层包裹 p 标签导致的样式问题
-                let renderedContent = marked.parse(quote.content).trim();
+                // 渲染前再次做小幅清理，确保 markdown blockquote 正确解析
+                const safeMd = quote.content.replace(/&gt;/g, '>');
+                let renderedContent = marked.parse(safeMd).trim();
 
-                // 如果结果被包裹在 p 标签中且只有一个段落，考虑是否需要 unwrap
-                // 但为了确保引用块等块级元素正确显示，我们保留 parse 的结果
-
+                // 使用块级容器避免把 blockquote 放入 inline 元素中
                 quotesHtml += `
                     <div class="quote-item">
                         <div class="quote-text">
                             <span class="quote-number">${quote.num}</span>
-                            <span class="quote-content">${renderedContent}</span>
+                            <div class="quote-content">${renderedContent}</div>
                         </div>
                     </div>
                 `;
