@@ -4,6 +4,9 @@
 ## 网址
 https://sakuraloveforever.github.io/soul_quotes_archive/
 
+## 效果图片
+<img width="2520" height="1431" alt="Clip_20260418_033328" src="https://github.com/user-attachments/assets/4b5c6734-58c2-41f9-94d8-67820e48e174" />
+
 ## Star History
 
 <a href="https://www.star-history.com/?repos=SakuraLoveForever%2Fsoul_quotes_archive&type=date&legend=top-left">
