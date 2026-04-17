@@ -453,7 +453,6 @@
             }
         }
     </style>
-<base target="_blank">
 </head>
 <body>
     <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
@@ -498,7 +497,7 @@
         let expandedState = {};
 
         function parseContent(text) {
-            const lines = text.split('\n');
+            const lines = text.split(/\r?\n/);
             let html = '';
             let currentCategory = '';
             let currentQuotes = [];
@@ -506,10 +505,22 @@
             let categoryCount = 0;
             categories = [];
 
-            lines.forEach(line => {
-                const trimmed = line.trim();
-                if (!trimmed) return;
+            for (let i = 0; i < lines.length; i++) {
+                const raw = lines[i];
+                const trimmed = raw.trim();
 
+                // 空行：如果正在构建语录，则作为换行保留，否则跳过
+                if (!trimmed) {
+                    if (currentQuotes.length > 0) {
+                        const last = currentQuotes[currentQuotes.length - 1];
+                        if (last && last._building) {
+                            last.content += '\n';
+                        }
+                    }
+                    continue;
+                }
+
+                // 分类标题
                 if (trimmed.match(/^#{1,2}\s/)) {
                     if (currentCategory && currentQuotes.length > 0) {
                         const catId = `category-${categoryCount}`;
@@ -519,22 +530,57 @@
                     }
                     currentCategory = trimmed.replace(/^#{1,2}\s*/, '');
                     categoryCount++;
-                    return;
+                    continue;
                 }
 
-                if (trimmed.startsWith('---')) return;
+                // 忽略分割线
+                if (trimmed.startsWith('---')) continue;
 
-                // 关键修复：正确处理 "数字. 内容" 格式，保留完整内容
-                const match = trimmed.match(/^(\d+)\.\s+(.+)$/);
-                if (match && currentCategory) {
-                    const num = match[1];
-                    // 保留数字后面的所有内容（包括 Markdown 标记）
-                    const content = trimmed.substring(match[0].indexOf(match[2]));
-                    currentQuotes.push({ num, content });
+                // 新的编号行：先进行向后预检并合并内容，若最终没有实际内容则跳过
+                const numberMatch = trimmed.match(/^(\d+)\.\s*(.*)$/);
+                if (numberMatch && currentCategory) {
+                    const num = numberMatch[1];
+                    let tempContent = numberMatch[2] || '';
+
+                    // 向后吞并非标题、非新编号的行到 tempContent（但暂不加入 currentQuotes）
+                    let j = i + 1;
+                    while (j < lines.length) {
+                        const look = lines[j];
+                        const lookTrim = look.trim();
+
+                        if (!lookTrim) {
+                            // 保留空行为换行
+                            tempContent += '\n';
+                            j++;
+                            continue;
+                        }
+
+                        if (lookTrim.match(/^#{1,2}\s/)) break; // 下一个分类
+                        if (lookTrim.match(/^(\d+)\.\s*(.*)$/)) break; // 下一个编号
+                        if (lookTrim.startsWith('---')) { j++; continue; }
+
+                        tempContent += '\n' + look;
+                        j++;
+                    }
+
+                    // 如果合并后的内容为空（仅序号无实质内容），则跳过，不计入语录
+                    if (tempContent.replace(/\s|&nbsp;|\u00A0/g, '') === '') {
+                        i = j - 1; // 跳过已检查的行
+                        continue;
+                    }
+
+                    // 否则把这条语录加入
+                    currentQuotes.push({ num, content: tempContent, _building: false });
                     quoteCount++;
-                }
-            });
 
+                    i = j - 1; // 外层循环会 i++，所以设为 j-1
+                    continue;
+                }
+
+                // 如果没有当前分类，跳过可能的无效行
+            }
+
+            // 收尾：把最后一个分类加入
             if (currentCategory && currentQuotes.length > 0) {
                 const catId = `category-${categoryCount}`;
                 html += createCategorySection(currentCategory, currentQuotes, catId);
