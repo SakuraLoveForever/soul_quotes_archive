@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵鸡汤 - 交互式语录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', 'Source Han Serif SC', 'SimSun', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .quote-item {
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+        }
+
+        .quote-item:hover {
+            border-left-color: #667eea;
+            background: rgba(255,255,255,0.95);
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .quote-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #444;
+            transition: all 0.3s ease;
+        }
+
+        .quote-item:hover .quote-text {
+            color: #2c3e50;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .category-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            color: #e74c3c;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍵 心灵鸡汤</h1>
+        <div id="content">
+            <div class="loading">正在加载语录...</div>
+        </div>
+    </div>
+
+    <script>
+        // 配置：文本文件路径（相对于HTML文件的位置）
+        const CONFIG = {
+            textFile: '心灵鸡汤.md',  // 你的文本文件名
+            refreshInterval: 5000  // 自动刷新间隔（毫秒）
+        };
+
+        // 解析Markdown内容的函数
+        function parseContent(text) {
+            const lines = text.split('\n');
+            let html = '';
+            let currentCategory = '';
+
+            lines.forEach(line => {
+                const trimmed = line.trim();
+
+                // 跳过空行和分隔符
+                if (!trimmed || trimmed.startsWith('---') || trimmed.startsWith('#')) {
+                    if (trimmed.startsWith('# ')) {
+                        currentCategory = trimmed.substring(2);
+                        html += `<h2 class="category-title">${currentCategory}</h2>`;
+                    }
+                    return;
+                }
+
+                // 处理语录内容
+                if (trimmed && trimmed.length > 0 && !trimmed.includes('：') && !trimmed.includes('(') && !trimmed[0] === '-') {
+                    const num = trimmed.split('.')[0];
+                    const content = trimmed.substring(trimmed.indexOf(' ') + 1);
+
+                    html += `
+                        <div class="quote-item">
+                            <div class="quote-text">${content}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            return html;
+        }
+
+        // 加载文本文件
+        async function loadContent() {
+            const contentDiv = document.getElementById('content');
+
+            try {
+                // 使用fetch API获取文本文件（支持本地文件或同源服务器）
+                const response = await fetch(CONFIG.textFile);
+
+                if (!response.ok) {
+                    throw new Error('无法加载文件');
+                }
+
+                const text = await response.text();
+                const html = parseContent(text);
+                contentDiv.innerHTML = html;
+
+            } catch (error) {
+                contentDiv.innerHTML = `
+                    <div class="error">
+                        <p>加载失败：${error.message}</p>
+                        <p>请确保 ${CONFIG.textFile} 文件存在于同一目录下</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载时执行
+        document.addEventListener('DOMContentLoaded', loadContent);
+
+        // 定时刷新（可选）
+        setInterval(loadContent, CONFIG.refreshInterval);
+    </script>
+</body>
+</html>
