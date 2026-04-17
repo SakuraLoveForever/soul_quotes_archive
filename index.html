@@ -24,13 +24,18 @@
 
         /* 顶部社交链接 */
         .social-links {
-            position: fixed;
-            top: 12px;
-            right: 20px;
+            position: static; /* 作为页面顶部的普通元素（不覆盖中间容器） */
             z-index: 1101;
             display: flex;
             gap: 8px;
             align-items: center;
+            justify-content: flex-end; /* 靠右对齐 */
+            width: calc(100% - 260px); /* 为了避开左侧固定侧栏 */
+            margin-left: 260px; /* 与侧栏宽度一致，防止覆盖 */
+            padding: 6px 20px 0 0; /* 顶部内边距减小，使按钮更靠上 */
+            margin-top: -8px; /* 上移一点，远离下面内容视觉上更靠上 */
+            margin-bottom: 24px; /* 与下方中间容器保留更大间距 */
+            transition: transform 0.18s ease, opacity 0.18s ease;
         }
 
         .social-link {
@@ -436,6 +441,16 @@
                 padding: 60px 15px 40px 15px;
             }
 
+            /* 窄屏时社交按钮占满宽度且不受侧栏影响 */
+            .social-links {
+                width: 100%;
+                margin-left: 0;
+                justify-content: flex-end;
+                padding-right: 8px;
+                margin-top: 0; /* 窄屏恢复正常位置 */
+                margin-bottom: 12px;
+            }
+
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
@@ -486,10 +501,10 @@
     <div class="overlay" onclick="toggleSidebar()"></div>
 
     <!-- 顶部社交链接：小红书 / GitHub / B站 -->
-    <div style="position:fixed;top:12px;right:20px;z-index:1101;display:flex;gap:8px;align-items:center;">
-        <a href="https://www.xiaohongshu.com/user/profile/5e72db210000000001000d66" target="_blank" rel="noopener" title="小红书" style="background:linear-gradient(135deg,#ff6b6b,#ff4757);color:white;padding:8px 12px;border-radius:14px;text-decoration:none;font-size:0.9em;box-shadow:0 4px 12px rgba(0,0,0,0.15);">小红书</a>
-        <a href="https://github.com/SakuraLoveForever" target="_blank" rel="noopener" title="GitHub" style="background:linear-gradient(135deg,#24292e,#444);color:white;padding:8px 12px;border-radius:14px;text-decoration:none;font-size:0.9em;box-shadow:0 4px 12px rgba(0,0,0,0.15);">GitHub</a>
-        <a href="https://space.bilibili.com/481036572" target="_blank" rel="noopener" title="Bilibili" style="background:linear-gradient(135deg,#00a1d6,#0066cc);color:white;padding:8px 12px;border-radius:14px;text-decoration:none;font-size:0.9em;box-shadow:0 4px 12px rgba(0,0,0,0.15);">B站</a>
+    <div id="top-social" class="social-links" role="navigation" aria-label="社交链接">
+        <a href="https://www.xiaohongshu.com/user/profile/5e72db210000000001000d66" target="_blank" rel="noopener" title="小红书" class="social-link" style="background:linear-gradient(135deg,#ff6b6b,#ff4757);">小红书</a>
+        <a href="https://github.com/SakuraLoveForever" target="_blank" rel="noopener" title="GitHub" class="social-link" style="background:linear-gradient(135deg,#24292e,#444);">GitHub</a>
+        <a href="https://space.bilibili.com/481036572" target="_blank" rel="noopener" title="Bilibili" class="social-link" style="background:linear-gradient(135deg,#00a1d6,#0066cc);">B站</a>
     </div>
 
     <nav class="sidebar" id="sidebar">
