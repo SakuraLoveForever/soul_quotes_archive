@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心灵鸡汤 - 交互式语录</title>
+    <meta name="color-scheme" content="light dark">
+    <title>心灵鸡汤 - 互动语录</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -22,19 +23,120 @@
             scroll-behavior: smooth;
         }
 
-        /* 顶部社交链接 */
+        /* 澶滈棿妯″紡锛堥€氳繃 body.dark 鎺у埗锛?*/
+        body.dark {
+            background: linear-gradient(135deg, #0b1020 0%, #181236 100%);
+            color: rgba(245, 247, 255, 0.92);
+            color-scheme: dark;
+        }
+        body:not(.dark){
+            color-scheme: light;
+        }
+
+        body.dark .sidebar {
+            background: rgba(18, 22, 45, 0.72);
+            border-right-color: rgba(151, 168, 255, 0.14);
+            box-shadow: 4px 0 18px rgba(0,0,0,0.35);
+        }
+        body.dark .sidebar-title {
+            color: rgba(216, 224, 255, 0.92);
+            border-bottom-color: rgba(151, 168, 255, 0.16);
+        }
+        body.dark .toc-item {
+            background: rgba(138, 162, 255, 0.10);
+            border-color: rgba(138, 162, 255, 0.18);
+            color: rgba(245, 247, 255, 0.86);
+        }
+        body.dark .toc-item:hover,
+        body.dark .toc-item.active {
+            background: rgba(138, 162, 255, 0.92);
+            color: #0b1020;
+            border-color: rgba(138, 162, 255, 0.92);
+            box-shadow: 0 6px 18px rgba(138, 162, 255, 0.18);
+        }
+
+        body.dark .container {
+            background: rgba(18, 22, 45, 0.62);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        }
+        body.dark h1 { color: rgba(245,247,255,0.92); text-shadow: 2px 2px 4px rgba(0,0,0,0.35); }
+        body.dark .hint { color: rgba(216,224,255,0.78); background: rgba(138,162,255,0.10); border-color: rgba(138,162,255,0.22); }
+        body.dark .stats { color: rgba(216,224,255,0.75); }
+
+        body.dark .category-section {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(138, 162, 255, 0.18);
+        }
+        body.dark .category-title {
+            color: rgba(245,247,255,0.90);
+            background: linear-gradient(135deg, rgba(138, 162, 255, 0.12) 0%, rgba(193, 160, 255, 0.10) 100%);
+        }
+        body.dark .category-title:hover {
+            background: linear-gradient(135deg, rgba(138, 162, 255, 0.20) 0%, rgba(193, 160, 255, 0.18) 100%);
+            box-shadow: 0 6px 18px rgba(138, 162, 255, 0.12);
+        }
+        body.dark .category-title::after { color: rgba(216,224,255,0.82); }
+
+        body.dark .quote-item {
+            background: rgba(255,255,255,0.06);
+        }
+        body.dark .quote-item:hover {
+            background: rgba(255,255,255,0.10);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+            border-left-color: rgba(138, 162, 255, 0.92);
+        }
+        body.dark .quote-text { color: rgba(245,247,255,0.82); }
+        body.dark .quote-item:hover .quote-text { color: rgba(245,247,255,0.92); }
+        body.dark .quote-text strong, body.dark .quote-text b { color: rgba(138, 162, 255, 0.96); }
+        body.dark .quote-text em, body.dark .quote-text i { color: rgba(193, 160, 255, 0.95); }
+        body.dark .quote-text code { background: rgba(138, 162, 255, 0.18); color: rgba(216,224,255,0.92); }
+        body.dark .quote-text blockquote,
+        body.dark .quote-text blockquote p {
+            background: rgba(138, 162, 255, 0.10);
+            border-left-color: rgba(138, 162, 255, 0.92);
+            color: rgba(245,247,255,0.78);
+        }
+
+        /* 椤堕儴锛氫富棰樺垏鎹㈡寜閽?*/
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.10);
+            color: rgba(255,255,255,0.92);
+            font-size: 0.85em;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        body.dark .theme-toggle{
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(151,168,255,0.18);
+            color: rgba(216,224,255,0.92);
+        }
+
+        /* 椤堕儴绀句氦閾炬帴 */
         .social-links {
-            position: static; /* 作为页面顶部的普通元素（不覆盖中间容器） */
+            position: static; /* 浣滀负椤甸潰椤堕儴鐨勬櫘閫氬厓绱狅紙涓嶈鐩栦腑闂村鍣級 */
             z-index: 1101;
             display: flex;
             gap: 8px;
             align-items: center;
-            justify-content: flex-end; /* 靠右对齐 */
-            width: calc(100% - 260px); /* 为了避开左侧固定侧栏 */
-            margin-left: 260px; /* 与侧栏宽度一致，防止覆盖 */
-            padding: 6px 20px 0 0; /* 顶部内边距减小，使按钮更靠上 */
-            margin-top: -8px; /* 上移一点，远离下面内容视觉上更靠上 */
-            margin-bottom: 24px; /* 与下方中间容器保留更大间距 */
+            justify-content: flex-end; /* 闈犲彸瀵归綈 */
+            width: calc(100% - 260px); /* 涓轰簡閬垮紑宸︿晶鍥哄畾渚ф爮 */
+            margin-left: 260px; /* 涓庝晶鏍忓搴︿竴鑷达紝闃叉瑕嗙洊 */
+            padding: 6px 20px 0 0; /* 椤堕儴鍐呰竟璺濆噺灏忥紝浣挎寜閽洿闈犱笂 */
+            margin-top: -8px; /* 涓婄Щ涓€鐐癸紝杩滅涓嬮潰鍐呭瑙嗚涓婃洿闈犱笂 */
+            margin-bottom: 24px; /* 涓庝笅鏂逛腑闂村鍣ㄤ繚鐣欐洿澶ч棿璺?*/
             transition: transform 0.18s ease, opacity 0.18s ease;
         }
 
@@ -54,7 +156,7 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
 
-        /* 左侧固定目录 */
+        /* 宸︿晶鍥哄畾鐩綍 */
         .sidebar {
             position: fixed;
             left: 0;
@@ -212,7 +314,7 @@
         }
 
         .hint::before {
-            content: "💡 ";
+            content: "馃挕 ";
         }
 
         .stats {
@@ -268,7 +370,7 @@
             border-bottom-color: #667eea;
         }
 
-        /* 优化性能：使用 display 代替 max-height */
+        /* 浼樺寲鎬ц兘锛氫娇鐢?display 浠ｆ浛 max-height */
         .quotes-container {
             display: none;
             padding: 20px 24px;
@@ -331,7 +433,7 @@
             font-weight: 600;
         }
 
-        /* 关键修复：确保引用块样式正确显示 */
+        /* 鍏抽敭淇锛氱‘淇濆紩鐢ㄥ潡鏍峰紡姝ｇ‘鏄剧ず */
         .quote-text blockquote,
         .quote-text blockquote p {
             margin: 10px 0;
@@ -436,18 +538,56 @@
             font-size: 1.1em;
         }
 
+        /* 鍥炲埌椤堕儴 / 鍥炲埌搴曢儴 */
+        .page-jump{
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 2000;
+        }
+        .page-jump button{
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(255,255,255,0.10);
+            color: rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+            font-weight: 900;
+            line-height: 1;
+        }
+        .page-jump button:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 14px 34px rgba(0,0,0,0.28);
+        }
+        body.dark .page-jump button{
+            border-color: rgba(151,168,255,0.18);
+            background: rgba(255,255,255,0.06);
+            color: rgba(216,224,255,0.92);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+        }
+        @media (max-width: 768px){
+            .page-jump{ right: 12px; bottom: 12px; }
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 60px 15px 40px 15px;
             }
 
-            /* 窄屏时社交按钮占满宽度且不受侧栏影响 */
+            /* 绐勫睆鏃剁ぞ浜ゆ寜閽崰婊″搴︿笖涓嶅彈渚ф爮褰卞搷 */
             .social-links {
                 width: 100%;
                 margin-left: 0;
                 justify-content: flex-end;
                 padding-right: 8px;
-                margin-top: 0; /* 窄屏恢复正常位置 */
+                margin-top: 0; /* 绐勫睆鎭㈠姝ｅ父浣嶇疆 */
                 margin-bottom: 12px;
             }
 
@@ -500,15 +640,16 @@
     <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
     <div class="overlay" onclick="toggleSidebar()"></div>
 
-    <!-- 顶部社交链接：小红书 / GitHub / B站 -->
+    <!-- 椤堕儴绀句氦閾炬帴锛氬皬绾功 / GitHub / B绔?-->
     <div id="top-social" class="social-links" role="navigation" aria-label="社交链接">
         <a href="https://www.xiaohongshu.com/user/profile/5e72db210000000001000d66" target="_blank" rel="noopener" title="小红书" class="social-link" style="background:linear-gradient(135deg,#ff6b6b,#ff4757);">小红书</a>
         <a href="https://github.com/SakuraLoveForever" target="_blank" rel="noopener" title="GitHub" class="social-link" style="background:linear-gradient(135deg,#24292e,#444);">GitHub</a>
-        <a href="https://space.bilibili.com/481036572" target="_blank" rel="noopener" title="Bilibili" class="social-link" style="background:linear-gradient(135deg,#00a1d6,#0066cc);">B站</a>
+        <a href="https://space.bilibili.com/481036572" target="_blank" rel="noopener" title="Bilibili" class="social-link" style="background:linear-gradient(135deg,#00a1d6,#0066cc);">Bilibili</a>
+        <button type="button" id="theme-toggle" class="theme-toggle" aria-pressed="false" title="切换主题">夜间</button>
     </div>
 
     <nav class="sidebar" id="sidebar">
-        <div class="sidebar-title">📚 目录导航</div>
+        <div class="sidebar-title">目录导航</div>
         <div class="sidebar-controls">
             <button class="sidebar-btn" onclick="expandAll()">全部展开</button>
             <button class="sidebar-btn" onclick="collapseAll()">全部收起</button>
@@ -520,7 +661,7 @@
 
     <div class="container">
         <h1>心灵鸡汤</h1>
-        <div class="hint">点击分类标题可展开或收起该部分内容，使用左侧目录快速跳转</div>
+        <div class="hint">点击分类标题可展开或收起内容，使用左侧目录快速跳转</div>
 
         <div class="stats" id="stats"></div>
         <div id="content">
@@ -528,308 +669,279 @@
         </div>
     </div>
 
+    <div class="page-jump" aria-label="页面跳转">
+        <button type="button" id="jump-top" title="回到顶部" aria-label="回到顶部">UP</button>
+        <button type="button" id="jump-bottom" title="回到底部" aria-label="回到底部">DN</button>
+    </div>
+
     <script>
-        const CONFIG = {
-            textFile: '心灵鸡汤.md'
-        };
+        (function () {
+            var CONFIG = { textFile: '心灵鸡汤.md' };
+            var hasMarked = typeof window.marked !== 'undefined';
+            var categories = [];
+            var expandedState = {};
 
-        marked.setOptions({
-            breaks: true,
-            gfm: true,
-            headerIds: false,
-            mangle: false,
-            smartLists: true,
-            smartypants: true
-        });
+            if (hasMarked) {
+                window.marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    headerIds: false,
+                    mangle: false,
+                    smartLists: true,
+                    smartypants: true
+                });
+            }
 
-        let categories = [];
-        let expandedState = {};
+            function escapeHtml(text) {
+                return String(text)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+            }
 
-        function parseContent(text) {
-            const lines = text.split(/\r?\n/);
-            let html = '';
-            let currentCategory = '';
-            let currentQuotes = [];
-            let quoteCount = 0;
-            let categoryCount = 0;
-            categories = [];
+            function renderMarkdown(mdText) {
+                var raw = String(mdText || '');
+                if (hasMarked) return window.marked.parse(raw).trim();
+                return escapeHtml(raw).replace(/\r?\n/g, '<br>');
+            }
 
-            for (let i = 0; i < lines.length; i++) {
-                const raw = lines[i];
-                const trimmed = raw.trim();
+            function createCategorySection(category, quotes, categoryId) {
+                var quotesHtml = '';
+                for (var i = 0; i < quotes.length; i++) {
+                    var quote = quotes[i];
+                    var safeMd = quote.content.replace(/&gt;/g, '>');
+                    var rendered = renderMarkdown(safeMd);
+                    quotesHtml += '<div class="quote-item"><div class="quote-text">' +
+                        '<span class="quote-number">' + quote.num + '</span>' +
+                        '<div class="quote-content">' + rendered + '</div>' +
+                        '</div></div>';
+                }
+                return '<div class="category-section" id="section-' + categoryId + '">' +
+                    '<h2 class="category-title" onclick="toggleCategory(\'' + categoryId + '\')" id="title-' + categoryId + '">' +
+                    escapeHtml(category) +
+                    '</h2>' +
+                    '<div class="quotes-container" id="' + categoryId + '">' + quotesHtml + '</div>' +
+                    '</div>';
+            }
 
-                // 空行：如果正在构建语录，则作为换行保留，否则跳过
-                if (!trimmed) {
-                    if (currentQuotes.length > 0) {
-                        const last = currentQuotes[currentQuotes.length - 1];
-                        if (last && last._building) {
-                            last.content += '\n';
-                        }
-                    }
-                    continue;
+            function parseContent(text) {
+                var lines = text.split(/\r?\n/);
+                var html = '';
+                var currentCategory = '';
+                var currentQuotes = [];
+                var quoteCount = 0;
+                var catIndex = 0;
+                categories = [];
+
+                function flushCategory() {
+                    if (!currentCategory || currentQuotes.length === 0) return;
+                    var catId = 'category-' + catIndex;
+                    html += createCategorySection(currentCategory, currentQuotes, catId);
+                    categories.push({ name: currentCategory, id: catId });
+                    currentQuotes = [];
+                    catIndex++;
                 }
 
-                // 分类标题
-                if (trimmed.match(/^#{1,2}\s/)) {
-                    if (currentCategory && currentQuotes.length > 0) {
-                        const catId = `category-${categoryCount}`;
-                        html += createCategorySection(currentCategory, currentQuotes, catId);
-                        categories.push({ name: currentCategory, id: catId });
-                        currentQuotes = [];
+                for (var i = 0; i < lines.length; i++) {
+                    var raw = lines[i];
+                    var trimmed = raw.trim();
+                    if (!trimmed) continue;
+                    if (/^#{1,2}\s/.test(trimmed)) {
+                        flushCategory();
+                        currentCategory = trimmed.replace(/^#{1,2}\s*/, '');
+                        continue;
                     }
-                    currentCategory = trimmed.replace(/^#{1,2}\s*/, '');
-                    categoryCount++;
-                    continue;
-                }
+                    if (/^---+/.test(trimmed)) continue;
+                    var m = trimmed.match(/^(\d+)\.\s*(.*)$/);
+                    if (!m || !currentCategory) continue;
 
-                // 忽略分割线
-                if (trimmed.startsWith('---')) continue;
-
-                // 新的编号行：先进行向后预检并合并内容，若最终没有实际内容则跳过
-                const numberMatch = trimmed.match(/^(\d+)\.\s*(.*)$/);
-                if (numberMatch && currentCategory) {
-                    const num = numberMatch[1];
-                    let tempContent = numberMatch[2] || '';
-
-                    // 向后吞并非标题、非新编号的行到 tempContent（但暂不加入 currentQuotes）
-                    let j = i + 1;
+                    var num = m[1];
+                    var tempContent = m[2] || '';
+                    var j = i + 1;
                     while (j < lines.length) {
-                        const look = lines[j];
-                        const lookTrim = look.trim();
-
+                        var look = lines[j];
+                        var lookTrim = look.trim();
                         if (!lookTrim) {
-                            // 保留空行为换行
                             tempContent += '\n';
                             j++;
                             continue;
                         }
-
-                        if (lookTrim.match(/^#{1,2}\s/)) break; // 下一个分类
-                        if (lookTrim.match(/^(\d+)\.\s*(.*)$/)) break; // 下一个编号
-                        if (lookTrim.startsWith('---')) { j++; continue; }
-
+                        if (/^#{1,2}\s/.test(lookTrim)) break;
+                        if (/^(\d+)\.\s*/.test(lookTrim)) break;
+                        if (/^---+/.test(lookTrim)) {
+                            j++;
+                            continue;
+                        }
                         tempContent += '\n' + look;
                         j++;
                     }
-
-                    // 规范化：把 &gt; 实体恢复为 '>'，并移除行首多余不可见空格，使 '>' 位于行首
-                    tempContent = tempContent.replace(/&gt;/g, '>')
-                        .split(/\r?\n/)
-                        .map(l => l.replace(/^[\u00A0\u0020\t]+(?=>)/, ''))
-                        .join('\n');
-
-                    // 如果合并后的内容为空（仅序号无实质内容），则跳过，不计入语录
-                    if (tempContent.replace(/\s|&nbsp;|\u00A0/g, '') === '') {
-                        i = j - 1; // 跳过已检查的行
-                        continue;
+                    tempContent = tempContent.replace(/&gt;/g, '>');
+                    if (tempContent.replace(/\s|&nbsp;|\u00A0/g, '') !== '') {
+                        currentQuotes.push({ num: num, content: tempContent });
+                        quoteCount++;
                     }
-
-                    // 否则把这条语录加入
-                    currentQuotes.push({ num, content: tempContent, _building: false });
-                    quoteCount++;
-
-                    i = j - 1; // 外层循环会 i++，所以设为 j-1
-                    continue;
+                    i = j - 1;
                 }
 
-                // 如果没有当前分类，跳过可能的无效行
-            }
-
-            // 收尾：把最后一个分类加入
-            if (currentCategory && currentQuotes.length > 0) {
-                const catId = `category-${categoryCount}`;
-                html += createCategorySection(currentCategory, currentQuotes, catId);
-                categories.push({ name: currentCategory, id: catId });
-            }
-
-            document.getElementById('stats').innerHTML = 
-                `共收录 <strong>${categoryCount}</strong> 个分类，<strong>${quoteCount}</strong> 条语录`;
-
-            generateTOC();
-            return html;
-        }
-
-        function generateTOC() {
-            const tocList = document.getElementById('toc-list');
-
-            if (categories.length === 0) {
-                tocList.innerHTML = '<div style="color: #999; text-align: center;">暂无目录</div>';
-                return;
-            }
-
-            tocList.innerHTML = categories.map(cat => 
-                `<div class="toc-item" id="toc-${cat.id}" onclick="jumpToCategory('${cat.id}')">
-                    <span>${cat.name}</span>
-                    <span class="toc-indicator">→</span>
-                </div>`
-            ).join('');
-        }
-
-        function jumpToCategory(categoryId) {
-            document.querySelectorAll('.toc-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.getElementById(`toc-${categoryId}`).classList.add('active');
-
-            const container = document.getElementById(categoryId);
-            const title = document.getElementById(`title-${categoryId}`);
-            const section = document.getElementById(`section-${categoryId}`);
-
-            if (container && title && section) {
-                container.classList.add('expanded');
-                title.classList.add('expanded');
-                expandedState[categoryId] = true;
-
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                if (window.innerWidth <= 768) {
-                    toggleSidebar();
+                flushCategory();
+                var stats = document.getElementById('stats');
+                if (stats) {
+                    stats.innerHTML = '共收录 <strong>' + categories.length + '</strong> 个分类，<strong>' + quoteCount + '</strong> 条语录';
                 }
+                return html;
             }
-        }
 
-        function createCategorySection(category, quotes, categoryId) {
-            let quotesHtml = '';
-
-            quotes.forEach(quote => {
-                // 渲染前再次做小幅清理，确保 markdown blockquote 正确解析
-                const safeMd = quote.content.replace(/&gt;/g, '>');
-                let renderedContent = marked.parse(safeMd).trim();
-
-                // 使用块级容器避免把 blockquote 放入 inline 元素中
-                quotesHtml += `
-                    <div class="quote-item">
-                        <div class="quote-text">
-                            <span class="quote-number">${quote.num}</span>
-                            <div class="quote-content">${renderedContent}</div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            return `
-                <div class="category-section" id="section-${categoryId}">
-                    <h2 class="category-title" onclick="toggleCategory('${categoryId}')" id="title-${categoryId}">
-                        ${category}
-                    </h2>
-                    <div class="quotes-container" id="${categoryId}">
-                        ${quotesHtml}
-                    </div>
-                </div>
-            `;
-        }
-
-        function toggleCategory(categoryId) {
-            const container = document.getElementById(categoryId);
-            const title = document.getElementById(`title-${categoryId}`);
-
-            if (container.classList.contains('expanded')) {
-                container.classList.remove('expanded');
-                title.classList.remove('expanded');
-                expandedState[categoryId] = false;
-            } else {
-                container.classList.add('expanded');
-                title.classList.add('expanded');
-                expandedState[categoryId] = true;
+            function generateTOC() {
+                var tocList = document.getElementById('toc-list');
+                if (!tocList) return;
+                if (categories.length === 0) {
+                    tocList.innerHTML = '<div style="color:#999;text-align:center;">暂无目录</div>';
+                    return;
+                }
+                var html = '';
+                for (var i = 0; i < categories.length; i++) {
+                    var cat = categories[i];
+                    html += '<div class="toc-item" id="toc-' + cat.id + '" onclick="jumpToCategory(\'' + cat.id + '\')">' +
+                        '<span>' + escapeHtml(cat.name) + '</span><span class="toc-indicator">→</span></div>';
+                }
+                tocList.innerHTML = html;
             }
-        }
 
-        function expandAll() {
-            document.querySelectorAll('.quotes-container').forEach(el => {
-                el.classList.add('expanded');
-            });
-            document.querySelectorAll('.category-title').forEach(el => {
-                el.classList.add('expanded');
-            });
-            categories.forEach(cat => {
-                expandedState[cat.id] = true;
-            });
-        }
+            window.toggleCategory = function (categoryId) {
+                var container = document.getElementById(categoryId);
+                var title = document.getElementById('title-' + categoryId);
+                if (!container || !title) return;
+                var expand = !container.classList.contains('expanded');
+                container.classList.toggle('expanded', expand);
+                title.classList.toggle('expanded', expand);
+                expandedState[categoryId] = expand;
+            };
 
-        function collapseAll() {
-            document.querySelectorAll('.quotes-container').forEach(el => {
-                el.classList.remove('expanded');
-            });
-            document.querySelectorAll('.category-title').forEach(el => {
-                el.classList.remove('expanded');
-            });
-            categories.forEach(cat => {
-                expandedState[cat.id] = false;
-            });
-        }
+            window.jumpToCategory = function (categoryId) {
+                var items = document.querySelectorAll('.toc-item');
+                for (var i = 0; i < items.length; i++) items[i].classList.remove('active');
+                var active = document.getElementById('toc-' + categoryId);
+                if (active) active.classList.add('active');
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.querySelector('.overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
+                var section = document.getElementById('section-' + categoryId);
+                if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                window.toggleCategory(categoryId);
+                if (window.innerWidth <= 768) window.toggleSidebar();
+            };
 
-        function updateActiveTOC() {
-            const scrollPos = window.scrollY + 100;
+            window.expandAll = function () {
+                var containers = document.querySelectorAll('.quotes-container');
+                var titles = document.querySelectorAll('.category-title');
+                for (var i = 0; i < containers.length; i++) containers[i].classList.add('expanded');
+                for (var j = 0; j < titles.length; j++) titles[j].classList.add('expanded');
+                for (var k = 0; k < categories.length; k++) expandedState[categories[k].id] = true;
+            };
 
-            categories.forEach(cat => {
-                const section = document.getElementById(`section-${cat.id}`);
-                if (section) {
-                    const top = section.offsetTop;
-                    const bottom = top + section.offsetHeight;
+            window.collapseAll = function () {
+                var containers = document.querySelectorAll('.quotes-container');
+                var titles = document.querySelectorAll('.category-title');
+                for (var i = 0; i < containers.length; i++) containers[i].classList.remove('expanded');
+                for (var j = 0; j < titles.length; j++) titles[j].classList.remove('expanded');
+                for (var k = 0; k < categories.length; k++) expandedState[categories[k].id] = false;
+            };
 
+            window.toggleSidebar = function () {
+                var sidebar = document.getElementById('sidebar');
+                var overlay = document.querySelector('.overlay');
+                if (sidebar) sidebar.classList.toggle('active');
+                if (overlay) overlay.classList.toggle('active');
+            };
+
+            function updateActiveTOC() {
+                var scrollPos = window.scrollY + 120;
+                for (var i = 0; i < categories.length; i++) {
+                    var cat = categories[i];
+                    var section = document.getElementById('section-' + cat.id);
+                    if (!section) continue;
+                    var top = section.offsetTop;
+                    var bottom = top + section.offsetHeight;
                     if (scrollPos >= top && scrollPos < bottom) {
-                        document.querySelectorAll('.toc-item').forEach(item => {
-                            item.classList.remove('active');
-                        });
-                        document.getElementById(`toc-${cat.id}`).classList.add('active');
+                        var items = document.querySelectorAll('.toc-item');
+                        for (var j = 0; j < items.length; j++) items[j].classList.remove('active');
+                        var active = document.getElementById('toc-' + cat.id);
+                        if (active) active.classList.add('active');
+                        return;
                     }
                 }
-            });
-        }
-
-        window.addEventListener('scroll', updateActiveTOC);
-
-        async function loadContent() {
-            const contentDiv = document.getElementById('content');
-
-            try {
-                const response = await fetch(CONFIG.textFile);
-
-                if (!response.ok) {
-                    throw new Error('无法加载文件，请确保 心灵鸡汤.md 与 index.html 在同一目录');
-                }
-
-                const text = await response.text();
-                const html = parseContent(text);
-
-                if (!html.trim()) {
-                    throw new Error('文件内容为空或格式不正确');
-                }
-
-                contentDiv.innerHTML = html;
-
-                Object.keys(expandedState).forEach(catId => {
-                    if (expandedState[catId]) {
-                        const container = document.getElementById(catId);
-                        const title = document.getElementById(`title-${catId}`);
-                        if (container && title) {
-                            container.classList.add('expanded');
-                            title.classList.add('expanded');
-                        }
-                    }
-                });
-
-            } catch (error) {
-                contentDiv.innerHTML = `
-                    <div class="error">
-                        <p>❌ ${error.message}</p>
-                        <p style="margin-top: 10px; font-size: 0.9em;">
-                            提示：由于浏览器安全限制，本地直接打开可能无法加载文件。<br>
-                            建议使用本地服务器：运行 <code>python -m http.server 8000</code> 后访问 localhost:8000
-                        </p>
-                    </div>
-                `;
             }
-        }
 
-        document.addEventListener('DOMContentLoaded', loadContent);
+            function applyTheme(theme) {
+                var toggle = document.getElementById('theme-toggle');
+                if (theme === 'dark') {
+                    document.body.classList.add('dark');
+                    if (toggle) {
+                        toggle.textContent = '日间';
+                        toggle.title = '切换到日间模式';
+                        toggle.setAttribute('aria-pressed', 'true');
+                    }
+                } else {
+                    document.body.classList.remove('dark');
+                    if (toggle) {
+                        toggle.textContent = '夜间';
+                        toggle.title = '切换到夜间模式';
+                        toggle.setAttribute('aria-pressed', 'false');
+                    }
+                }
+            }
+
+            function initTheme() {
+                var stored = localStorage.getItem('site-theme-soul');
+                applyTheme(stored || 'light');
+            }
+
+            function bindButtons() {
+                var jumpTop = document.getElementById('jump-top');
+                var jumpBottom = document.getElementById('jump-bottom');
+                var toggle = document.getElementById('theme-toggle');
+                if (jumpTop) jumpTop.addEventListener('click', function () {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                if (jumpBottom) jumpBottom.addEventListener('click', function () {
+                    var max = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+                    window.scrollTo({ top: max, behavior: 'smooth' });
+                });
+                if (toggle) toggle.addEventListener('click', function () {
+                    var isDark = document.body.classList.contains('dark');
+                    var next = isDark ? 'light' : 'dark';
+                    applyTheme(next);
+                    localStorage.setItem('site-theme-soul', next);
+                });
+            }
+
+            async function loadContent() {
+                var contentDiv = document.getElementById('content');
+                try {
+                    var response = await fetch(CONFIG.textFile, { cache: 'no-store' });
+                    if (!response.ok) {
+                        throw new Error('无法加载文件，请确保 心灵鸡汤.md 与 index.html 在同一目录');
+                    }
+                    var text = await response.text();
+                    var html = parseContent(text);
+                    if (!html.trim()) throw new Error('文件内容为空或格式不正确');
+                    contentDiv.innerHTML = html;
+                    generateTOC();
+                    updateActiveTOC();
+                } catch (error) {
+                    contentDiv.innerHTML = '<div class="error"><p>❌ ' + escapeHtml(error.message) + '</p>' +
+                        '<p style="margin-top:10px;font-size:0.9em;">提示：请用 Live Server 打开，避免本地 file:// 限制。</p></div>';
+                }
+            }
+
+            window.addEventListener('scroll', updateActiveTOC);
+            window.addEventListener('resize', updateActiveTOC);
+            document.addEventListener('DOMContentLoaded', function () {
+                bindButtons();
+                initTheme();
+                loadContent();
+            });
+        })();
     </script>
 </body>
 </html>
