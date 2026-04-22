@@ -707,6 +707,15 @@
                 return escapeHtml(raw).replace(/\r?\n/g, '<br>');
             }
 
+            function normalizeListContinuationIndent(mdText) {
+                var lines = String(mdText || '').split(/\r?\n/);
+                if (lines.length <= 1) return String(mdText || '');
+                for (var i = 1; i < lines.length; i++) {
+                    lines[i] = lines[i].replace(/^\s{1,4}/, '');
+                }
+                return lines.join('\n');
+            }
+
             function createCategorySection(category, quotes, categoryId) {
                 var quotesHtml = '';
                 for (var i = 0; i < quotes.length; i++) {
@@ -778,6 +787,7 @@
                         j++;
                     }
                     tempContent = tempContent.replace(/&gt;/g, '>');
+                    tempContent = normalizeListContinuationIndent(tempContent);
                     if (tempContent.replace(/\s|&nbsp;|\u00A0/g, '') !== '') {
                         currentQuotes.push({ num: num, content: tempContent });
                         quoteCount++;
