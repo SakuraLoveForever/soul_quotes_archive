@@ -40,7 +40,6 @@ npx serve .
 ## 在线访问
 
 - **主站：** [sakuraloveforever.github.io/soul_quotes_archive](https://sakuraloveforever.github.io/soul_quotes_archive/)
-- **镜像：** [soulquotesachive.netlify.app](https://soulquotesachive.netlify.app/)
 
 ## 效果预览
 
