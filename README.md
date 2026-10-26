@@ -62,7 +62,15 @@ python serve.py
 
 ## 效果预览
 
-![蕾姆深蓝主题页面预览](assets/preview.png)
+整体布局：
+
+[![蕾姆深蓝主题页面预览](assets/preview.png)](https://raw.githubusercontent.com/SakuraLoveForever/soul_quotes_archive/main/assets/preview.png)
+
+语录卡片细节（从原图裁切，保留原始像素）：
+
+[![冰菓语录卡片细节](assets/preview-detail.png)](https://raw.githubusercontent.com/SakuraLoveForever/soul_quotes_archive/main/assets/preview-detail.png)
+
+点击图片可查看原图，也可以直接访问[在线网页](https://sakuraloveforever.github.io/soul_quotes_archive/)体验。
 
 ## Star History
 
