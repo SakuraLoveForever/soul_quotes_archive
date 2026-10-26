@@ -62,7 +62,7 @@ python serve.py
 
 ## 效果预览
 
-<img width="2520" height="1431" alt="screenshot" src="https://github.com/user-attachments/assets/4b5c6734-58c2-41f9-94d8-67820e48e174" />
+![蕾姆深蓝主题页面预览](assets/preview.png)
 
 ## Star History
 
